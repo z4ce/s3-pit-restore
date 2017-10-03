@@ -175,7 +175,7 @@ def download_file(obj):
 def do_restore():
     pit_start_date = (parse(args.from_timestamp) if args.from_timestamp else datetime.fromtimestamp(0, timezone.utc))
     pit_end_date = (parse(args.timestamp) if args.timestamp else datetime.now(timezone.utc))
-    client = boto3.client('s3')
+    client = boto3.client('s3', endpoint_url=args.endpoint_url)
     global transfer
     transfer = boto3.s3.transfer.S3Transfer(client)
     dest = args.dest
@@ -255,6 +255,8 @@ if __name__=='__main__':
     parser.add_argument('-t', '--timestamp', help='final point in time to restore at')
     parser.add_argument('-f', '--from-timestamp', help='starting point in time to restore from')
     parser.add_argument('-d', '--dest', help='path where recovering to', required=True)
+    parser.add_argument('-u', '--endpoint-url', help='Endpoint URL to connect to', default=None)
+    parser.add_argument('-k', '--skip-ssl-validation', help='If set, SSL validation is skipped', action='store_true')
     parser.add_argument('-e', '--enable-glacier', help='enable recovering from glacier', action='store_true')
     parser.add_argument('-v', '--verbose', help='print verbose informations from s3 objects', action='store_true')
     parser.add_argument('--dry-run', help='execute query without transferring files', action='store_true')
