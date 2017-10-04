@@ -65,7 +65,7 @@ class TestS3PitRestore(unittest.TestCase):
         return True
 
     def upload_directory(self, resource, path, bucketname):
-        with concurrent.futures.ThreadPoolExecutor(args.max_workers) as e:                
+        with concurrent.futures.ThreadPoolExecutor(args.max_workers) as e:
             for root,dirs,files in os.walk(path):
                 for f in files:
                     base_path = os.path.basename(os.path.normpath(path))
@@ -175,7 +175,7 @@ def download_file(obj):
 def do_restore():
     pit_start_date = (parse(args.from_timestamp) if args.from_timestamp else datetime.fromtimestamp(0, timezone.utc))
     pit_end_date = (parse(args.timestamp) if args.timestamp else datetime.now(timezone.utc))
-    client = boto3.client('s3', endpoint_url=args.endpoint_url)
+    client = boto3.client('s3', endpoint_url=args.endpoint_url, verify=args.skip_ssl_validation)
     global transfer
     transfer = boto3.s3.transfer.S3Transfer(client)
     dest = args.dest
